@@ -1,0 +1,10 @@
+fastapi==0.100.0
+uvicorn==0.22.0
+langchain==0.0.231
+langchain_community==0.0.5
+numpy==1.25.0
+faiss-cpu==1.7.4
+pydantic==1.10.7
+fitz==0.0.1.dev2  
+transformers==4.31.0  
+CTransformers==0.2.24

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="icon" href="header.png" type="image/x-icon">
+    <style>
+        body {
+            position: relative;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #b6e4c5, #7da06279), url('https://www.transparenttextures.com/patterns/diamond-upholstery.png');
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            color: #333;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent 70%);
+            z-index: -1; 
+        }
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .decorative-element {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: floating 6s ease-in-out infinite;
+            z-index: -2;
+        }
+
+        .decorative-element:nth-child(1) {
+            top: 20%;
+            left: 15%;
+        }
+
+        .decorative-element:nth-child(2) {
+            top: 80%;
+            left: 80%;
+            width: 200px;
+            height: 200px;
+        }
+
+        .decorative-element:nth-child(3) {
+            top: 5%;
+            left: 87%;
+            width: 200px;
+            height: 200px;
+        }
+
+        .decorative-element:nth-child(4) {
+            top: 50%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+        }
+
+        .decorative-element:nth-child(5) {
+            top: 3%;
+            left: 8%;
+            width: 200px;
+            height: 200px;
+        }
+        .decorative-element:nth-child(6) {
+            top: 50%;
+            left: 75%;
+            width: 100px;
+            height: 100px;
+        }
+
+        .chat-container {
+            margin-top: 5%;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.74);
+            width: 800px;
+            height: 720px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        .chat-header {
+            position: relative; 
+            text-align: center;
+            height: 50px; 
+        }
+
+        .chat-header img {
+            width: 120px; 
+            height: auto;
+            margin-left: 10%;
+            top: 70%; 
+            transform: translate(-50%, -50%); 
+            opacity: 0.8; 
+            transition: opacity 0.3s ease; 
+            margin-top: -1%;
+        }
+
+        .chat-header img:hover {
+            opacity: 0; 
+        }
+
+        .chat-header img:hover + .hover-text {  
+            opacity: 1; 
+        }
+
+        .hover-text {
+           position: absolute;
+            width: 90%; 
+            height: auto;
+            color: rgb(255, 255, 255);
+            font-size: 28px;
+            opacity: 0; 
+            transition: opacity 0.3s ease; 
+            pointer-events: none;
+            z-index: 1;
+            text-align: center;
+            background: linear-gradient(135deg, #4CAF50, #2e8b57); 
+            border-radius: 12px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 5%;
+            margin-top: -15%;
+        }
+
+        .chat-box {
+            height: 570px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .chat-box .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            word-wrap: break-word; 
+        }
+
+        .chat-box .user-message {
+            text-align: right;
+            background-color: #dcf8c6;
+            max-width: 40%;
+            margin-left: auto; 
+        }
+
+        .chat-box .bot-message {
+            background-color: #f0f0f0;
+            margin-right: auto; 
+            max-width: 90%;
+            height: auto;
+        }
+
+        .input-container {
+            display: flex;
+            width: 96%;
+            
+        }
+
+        .input-container input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+        }
+
+        .input-container .file-upload {
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .input-container .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .input-container .file-upload label {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .input-container .file-upload label:hover {
+            background-color: #bae6bbce;
+        }
+
+        .input-container button {
+            width: 13%;
+            padding: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #45a049;
+        }
+
+           .input-container .file-preview-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-preview-container span {
+            margin-left: 5px;
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-preview-container button {
+            margin-left: 10px;
+            border: none;
+            background: none;
+            color: #ff0000;
+            cursor: pointer;
+        }
+
+        .start-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: auto;  
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative elements -->
+    <div class="decorative-element"></div>
+    <div class="decorative-element"></div>
+    <div class="decorative-element"></div>
+    <div class="decorative-element"></div>
+    <div class="decorative-element"></div>
+    <div class="decorative-element"></div>
+    
+    <!-- Chat container -->
+    <div class="chat-container">
+        <!-- Chat header with logo -->
+        <div class="chat-header">
+            <img src="logo.png" alt="ChatBot">
+            <div class="hover-text">Chatbot</div>
+        </div>
+
+        <!-- Chat box -->
+        <div id="chat-box" class="chat-box">
+            <img id="start-image" class="start-image" src="file.png" alt="Start Image">
+        </div>
+
+        <!-- Input container -->
+        <div class="input-container">
+            <!-- File upload -->
+            <div class="file-upload">
+                <input type="file" id="fileInput" accept="application/pdf" style="display:none;" />
+                <label for="fileInput" class="attachment-icon">
+                    <img src="attach.png" alt="Attach File" width="18" height="18">
+                </label>
+            </div>
+            
+            <!-- User input for message -->
+            <input type="text" id="user-input" placeholder="Type your message here...">
+            <div id="file-preview-container"></div>
+            
+            <!-- Send button -->
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle chat interactions -->
+    <script>
+        function appendMessage(content, isUser = false, isFile = false) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+    
+            if (isUser) {
+                messageDiv.classList.add('user-message');
+            } else {
+                messageDiv.classList.add('bot-message');
+            }
+    
+            if (isFile) {
+                messageDiv.innerHTML = `<span>${content}</span>`;
+            } else {
+                messageDiv.innerText = content;
+            }
+    
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const question = input.value.trim();
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+    
+            if (!question && !file) return;
+            if (question) {
+                appendMessage(question, true);
+                input.value = '';
+            }
+    
+            const startImage = document.getElementById('start-image');
+            if (startImage) {
+                startImage.style.display = 'none';
+            }
+    
+            try {
+                if (file && file.type === "application/pdf") {
+                    const formData = new FormData();
+                    formData.append("file", file);
+    
+                    removeFile();
+    
+                    const response = await fetch("http://127.0.0.1:8001/upload/", {
+                        method: "POST",
+                        body: formData
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+    
+                    const data = await response.json();
+                    appendMessage(`Document '${file.name}' uploaded successfully.`, false, true);
+                } else if (question) {
+                    const response = await fetch('http://127.0.0.1:8001/chat/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ question })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+    
+                    const data = await response.json();
+                    appendMessage(data.response);
+                }
+            } catch (error) {
+                appendMessage(`Error: ${error.message}`);
+            }
+        }
+    
+        document.getElementById('user-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    
+        document.getElementById("fileInput").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file && file.type === "application/pdf") {
+                const input = document.getElementById('user-input');
+                input.value = `📄 Selected file: ${file.name}\n\n\n`;
+            } else {
+                alert("Please select a valid PDF file.");
+            }
+        });
+    
+        function removeFile() {
+            document.getElementById("fileInput").value = "";
+        }
+    </script>
+</body>
+</html>
